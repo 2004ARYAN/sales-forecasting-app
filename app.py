@@ -1,4 +1,4 @@
-# app.py
+# app.py (Corrected Version)
 
 import streamlit as st
 import pandas as pd
@@ -96,8 +96,19 @@ if st.sidebar.button("Forecast Sales", type="primary"):
     # 2. One-Hot Encode the new data in the same way as the training data
     categorical_cols = ['Category', 'Region', 'Weather Condition', 'Seasonality']
 
-    # We use the full raw_df to ensure all possible categorical values are represented in the template
-    template_df = pd.get_dummies(raw_df.drop('Units Sold', axis=1), columns=categorical_cols, drop_first=True)
+    # --- THIS IS THE FIX ---
+    # Create the template by performing ALL the same feature engineering steps as in the training notebook
+    template_df = raw_df.copy() # <--- CHANGE: Start with a copy of the raw data
+
+    # Re-create the calculated columns that were part of the training data
+    template_df['Revenue'] = template_df['Price'] * template_df['Units Sold'] * (1 - template_df['Discount'] / 100) # <--- CHANGE
+    template_df['EstimatedCostOfGoods'] = template_df['Competitor Pricing'] * template_df['Units Sold'] # <--- CHANGE
+    template_df['EstimatedProfit'] = template_df['Revenue'] - template_df['EstimatedCostOfGoods'] # <--- CHANGE
+    template_df['Promotion_Status'] = template_df['Holiday/Promotion'].map({0: 'No Promotion', 1: 'Promotion'}) # <--- CHANGE
+
+    # Now, drop the target and perform one-hot encoding
+    template_df = pd.get_dummies(template_df.drop('Units Sold', axis=1), columns=categorical_cols, drop_first=True) # <--- CHANGE
+    # --- END OF FIX ---
     
     # One-hot encode our single input row
     input_df_encoded = pd.get_dummies(input_df, columns=categorical_cols, drop_first=True)
