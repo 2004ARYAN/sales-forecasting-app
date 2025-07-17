@@ -6,10 +6,6 @@ An end-to-end data science project that forecasts daily retail sales. This inter
 
 This project simulates a real-world scenario where a business needs to predict future demand to optimize inventory, staffing, and marketing efforts, similar to challenges faced in an SAP data environment.
 
-##  Demo
-
-![App Screenshot](https://user-images.githubusercontent.com/your-username/your-repo/assets/screenshot.png)
-*(Note: You need to upload your screenshot to the GitHub repo and replace the link above)*
 
 ## Features
 
